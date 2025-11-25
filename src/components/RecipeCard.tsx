@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { Recipe } from '../types'
 
 type Props = {
@@ -5,7 +6,7 @@ type Props = {
   onOpen: (recipe: Recipe) => void
 }
 
-export function RecipeCard({ recipe, onOpen }: Props) {
+export const RecipeCard = memo(function RecipeCard({ recipe, onOpen }: Props) {
   const difficultyMap = {
     easy: 'Fácil',
     medium: 'Media',
@@ -28,7 +29,12 @@ export function RecipeCard({ recipe, onOpen }: Props) {
     >
       {recipe.imageUrl && (
         <div className="recipe-thumb" aria-hidden="true">
-          <img src={recipe.imageUrl} alt={recipe.title} loading="lazy" />
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.title}
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       )}
       <div className="recipe-header">
@@ -42,6 +48,6 @@ export function RecipeCard({ recipe, onOpen }: Props) {
       <p className="recipe-description">{recipe.description}</p>
     </article>
   )
-}
+})
 
 

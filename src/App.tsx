@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import './App.css'
 import { Header } from './components/Header'
 import { RecipeList } from './components/RecipeList'
@@ -119,13 +119,13 @@ function App() {
       ).length
     }))
 
-  function openRecipe(recipe: Recipe) {
+  const openRecipe = useCallback((recipe: Recipe) => {
     setSelected(recipe)
-  }
+  }, [])
 
-  function closeRecipe() {
+  const closeRecipe = useCallback(() => {
     setSelected(null)
-  }
+  }, [])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
