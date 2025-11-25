@@ -6,6 +6,12 @@ type Props = {
 }
 
 export function RecipeCard({ recipe, onOpen }: Props) {
+  const difficultyMap = {
+    easy: 'Fácil',
+    medium: 'Media',
+    hard: 'Difícil'
+  }
+
   return (
     <article
       className={`recipe-card`}
@@ -22,15 +28,15 @@ export function RecipeCard({ recipe, onOpen }: Props) {
     >
       {recipe.imageUrl && (
         <div className="recipe-thumb" aria-hidden="true">
-          <img src={recipe.imageUrl} alt="" />
+          <img src={recipe.imageUrl} alt={recipe.title} loading="lazy" />
         </div>
       )}
       <div className="recipe-header">
         <h2 className="recipe-title">{recipe.title}</h2>
         <div className="recipe-meta">
-          <span>{recipe.timeMinutes} min</span>
+          <span>{recipe.totalTimeMinutes} min</span>
           <span className={`dot`}>•</span>
-          <span>{recipe.difficulty}</span>
+          <span>{difficultyMap[recipe.difficulty]}</span>
         </div>
       </div>
       <p className="recipe-description">{recipe.description}</p>

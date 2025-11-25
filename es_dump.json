@@ -1,0 +1,125 @@
+{
+  "took": 9,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 2.1954093,
+    "hits": [
+      {
+        "_index": "recipes",
+        "_id": "691f260b9d2ada464e40a586",
+        "_score": 2.1954093,
+        "_source": {
+          "__v": 0,
+          "cookTimeMinutes": 0,
+          "course": "Entrante",
+          "createdAt": "2025-11-20T14:30:35.274Z",
+          "cuisine": "Italiana",
+          "description": "Version fresca de la caprese con espinaca, tomate, albahaca y lascas de parmesano.",
+          "difficulty": "easy",
+          "imageUrl": "https://source.unsplash.com/800x600/?salad,fresh,healthy",
+          "ingredients": [
+            {
+              "ingredientId": "691f260b9d2ada464e40a573",
+              "name": "Espinaca fresca",
+              "notes": "",
+              "optional": false,
+              "quantity": 120,
+              "unit": "g"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a558",
+              "name": "Tomate",
+              "notes": "en rodajas",
+              "optional": false,
+              "quantity": 3,
+              "unit": "unidad"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a55c",
+              "name": "Albahaca fresca",
+              "notes": "",
+              "optional": false,
+              "quantity": 16,
+              "unit": "hoja"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a55d",
+              "name": "Queso parmesano",
+              "notes": "en lascas",
+              "optional": false,
+              "quantity": 50,
+              "unit": "g"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a559",
+              "name": "Aceite de oliva virgen extra",
+              "notes": "",
+              "optional": false,
+              "quantity": 3,
+              "unit": "cda"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a560",
+              "name": "Limon",
+              "notes": "zumo",
+              "optional": false,
+              "quantity": 0.5,
+              "unit": "unidad"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a578",
+              "name": "Sal marina",
+              "notes": "",
+              "optional": false,
+              "quantity": 0.5,
+              "unit": "cdita"
+            },
+            {
+              "ingredientId": "691f260b9d2ada464e40a579",
+              "name": "Pimienta negra molida",
+              "notes": "",
+              "optional": false,
+              "quantity": 0.25,
+              "unit": "cdita"
+            }
+          ],
+          "instructions": [],
+          "nutrition": {
+            "calories": 210,
+            "carbs": 9,
+            "fat": 16,
+            "fiber": 3,
+            "protein": 9,
+            "sugar": 5
+          },
+          "prepTimeMinutes": 10,
+          "servings": 4,
+          "slug": "ensalada-verde-caprese",
+          "source": "Cocina Ligera",
+          "tags": [
+            "ensalada",
+            "vegetariano",
+            "sin-coccion"
+          ],
+          "tips": [
+            "Utiliza tomates maduros pero firmes para un mejor corte.",
+            "Agrega frutos secos tostados para mas textura."
+          ],
+          "title": "Ensalada verde estilo caprese",
+          "totalTimeMinutes": 10,
+          "updatedAt": "2025-11-20T14:30:35.274Z"
+        }
+      }
+    ]
+  }
+}

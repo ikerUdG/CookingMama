@@ -10,7 +10,7 @@ export function RecipeList({ recipes, onOpen }: Props) {
   return (
     <section className="recipes" aria-label="Listado de recetas">
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} onOpen={onOpen} />)
+        <RecipeCard key={recipe._id} recipe={recipe} onOpen={onOpen} />)
       )}
     </section>
   )
