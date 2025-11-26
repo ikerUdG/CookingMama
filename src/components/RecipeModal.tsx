@@ -6,6 +6,12 @@ type Props = {
 }
 
 export function RecipeModal({ recipe, onClose }: Props) {
+  const difficultyMap = {
+    easy: 'Fácil',
+    medium: 'Media',
+    hard: 'Difícil'
+  }
+
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="recipe-dialog-title" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -14,19 +20,19 @@ export function RecipeModal({ recipe, onClose }: Props) {
           <button className="modal-close" onClick={onClose} aria-label="Cerrar">×</button>
         </header>
         <div className="modal-meta">
-          {typeof recipe.timePrepMinutes === 'number' && <span>Prep: {recipe.timePrepMinutes} min</span>}
-          {typeof recipe.timeCookMinutes === 'number' && <span>•</span>}
-          {typeof recipe.timeCookMinutes === 'number' && <span>Cocción: {recipe.timeCookMinutes} min</span>}
+          {typeof recipe.prepTimeMinutes === 'number' && <span>Prep: {recipe.prepTimeMinutes} min</span>}
+          {typeof recipe.cookTimeMinutes === 'number' && <span>•</span>}
+          {typeof recipe.cookTimeMinutes === 'number' && <span>Cocción: {recipe.cookTimeMinutes} min</span>}
           <span className="dot">•</span>
-          <span>Total: {typeof recipe.timePrepMinutes === 'number' && typeof recipe.timeCookMinutes === 'number' ? recipe.timePrepMinutes + recipe.timeCookMinutes : recipe.timeMinutes} min</span>
+          <span>Tiempo total: {recipe.totalTimeMinutes} min</span>
           <span className="dot">•</span>
-          <span>{recipe.difficulty}</span>
+          <span>{difficultyMap[recipe.difficulty]}</span>
           <span className="dot">•</span>
           <span>Raciones: {recipe.servings}</span>
         </div>
         {recipe.imageUrl && (
           <div className="modal-hero" aria-hidden="true">
-            <img src={recipe.imageUrl} alt="" />
+            <img src={recipe.imageUrl} alt={recipe.title} />
           </div>
         )}
         <div className="modal-content">
@@ -39,17 +45,25 @@ export function RecipeModal({ recipe, onClose }: Props) {
               <h3>Ingredientes</h3>
               <ul>
                 {recipe.ingredients.map((item, idx) => (
-                  <li key={idx}>{item}</li>
+                  <li key={idx}>
+                    {item.quantity && item.unit ? `${item.quantity} ${item.unit} ` : ''}
+                    {item.name}
+                    {item.notes ? ` (${item.notes})` : ''}
+                  </li>
                 ))}
               </ul>
             </section>
             <section className="steps section">
-              <h3>Pasos</h3>
-              <ol>
-                {recipe.steps.map((step, idx) => (
-                  <li key={idx}>{step}</li>
-                ))}
-              </ol>
+              <h3>Instrucciones</h3>
+              {recipe.instructions.length > 0 ? (
+                <ol>
+                  {recipe.instructions.map((step, idx) => (
+                    <li key={idx}>{step}</li>
+                  ))}
+                </ol>
+              ) : (
+                <p>No hay instrucciones disponibles.</p>
+              )}
             </section>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { Recipe } from '../types'
 import { RecipeCard } from './RecipeCard'
 
@@ -6,14 +7,14 @@ type Props = {
   onOpen: (recipe: Recipe) => void
 }
 
-export function RecipeList({ recipes, onOpen }: Props) {
+export const RecipeList = memo(function RecipeList({ recipes, onOpen }: Props) {
   return (
     <section className="recipes" aria-label="Listado de recetas">
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} onOpen={onOpen} />)
+        <RecipeCard key={recipe._id} recipe={recipe} onOpen={onOpen} />)
       )}
     </section>
   )
-}
+})
 
 

@@ -6,19 +6,20 @@ type Props = {
 export function Header({ query, onChange }: Props) {
   return (
     <header className="header">
-      <h1 className="brand">Recetas</h1>
-      <div className="search">
+      <div className="header-top">
+        <img src="/logo.jpg" alt="Cooking Mama" className="logo" />
+        <h1 className="brand-title">Cooking Mama</h1>
+      </div>
+      <div className="search-container">
         <input
           type="search"
-          placeholder="Buscar recetas (próximamente)"
+          className="search-input"
+          placeholder="Buscar recetas deliciosas..."
           value={query}
           onChange={(e) => onChange(e.target.value)}
           aria-label="Buscar recetas"
-          disabled
         />
       </div>
     </header>
   )
 }
-
-
