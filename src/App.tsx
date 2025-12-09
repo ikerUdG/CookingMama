@@ -17,10 +17,13 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   // Filter selections
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
   const [maxTime, setMaxTime] = useState<number | null>(null)
   const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([])
+  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([])
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([])
+  const [allCuisines, setAllCuisines] = useState<string[]>([])
+  const [allCourses, setAllCourses] = useState<string[]>([])
 
   // Fetch all ingredients
   useEffect(() => {
@@ -34,6 +37,39 @@ function App() {
       }
     }
     fetchIngredients()
+  }, [])
+
+  // Fetch all available cuisines and courses for filter options
+  useEffect(() => {
+    async function fetchFilterOptions() {
+      try {
+        // Fetch all recipes without filters to get all available options
+        // Using max size (100) to get as many options as possible
+        const response = await fetch(`${API_BASE}/search/recipes?size=100`)
+        if (response.ok) {
+          const data = await response.json()
+          const allRecipes = data.hits?.hits?.map((hit: any) => hit._source) || 
+                           data.hits?.map((hit: any) => hit._source) || 
+                           data.results || []
+          
+          const cuisines = Array.from(new Set(allRecipes.map((r: Recipe) => r.cuisine).filter(Boolean)))
+          const courses = Array.from(new Set(allRecipes.map((r: Recipe) => r.course).filter(Boolean)))
+          
+          console.log('📊 Available filter options:', {
+            cuisines: cuisines.sort(),
+            courses: courses.sort(),
+            totalRecipes: allRecipes.length,
+            sampleCuisines: allRecipes.slice(0, 5).map(r => ({ title: r.title, cuisine: r.cuisine, course: r.course }))
+          })
+          
+          setAllCuisines(cuisines.sort() as string[])
+          setAllCourses(courses.sort() as string[])
+        }
+      } catch (error) {
+        console.error('Error fetching filter options:', error)
+      }
+    }
+    fetchFilterOptions()
   }, [])
 
   // Fetch recipes based on selected ingredients using Elasticsearch
@@ -58,6 +94,18 @@ function App() {
           params.append('difficulty', selectedDifficulty.join(','))
         }
 
+        if (selectedCuisines.length > 0) {
+          // Según la documentación, cuisine es String (no String/Array)
+          // Solo enviamos el primer valor seleccionado
+          params.append('cuisine', selectedCuisines[0])
+        }
+
+        if (selectedCourses.length > 0) {
+          // Según la documentación, course es String (no String/Array)
+          // Solo enviamos el primer valor seleccionado
+          params.append('course', selectedCourses[0])
+        }
+
         if (query) {
           params.append('q', query)
         }
@@ -73,15 +121,64 @@ function App() {
           url += '?' + params.toString()
         }
 
+        // Debug: Log the URL being requested
+        console.log('🔍 Fetching recipes from:', url)
+        console.log('📋 Selected filters:', {
+          cuisines: selectedCuisines,
+          courses: selectedCourses,
+          ingredients: selectedIngredients.length,
+          difficulty: selectedDifficulty,
+          maxTime
+        })
+        console.log('🔗 URL Params breakdown:', {
+          cuisineParam: selectedCuisines.length > 0 ? selectedCuisines[0] : 'none',
+          courseParam: selectedCourses.length > 0 ? selectedCourses[0] : 'none',
+          fullParams: params.toString()
+        })
+
         const response = await fetch(url)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
         const data = await response.json()
+
+        // Debug: Log the response structure
+        console.log('📥 API Response:', {
+          hasHits: !!data.hits,
+          hitsStructure: data.hits?.hits ? 'hits.hits' : data.hits ? 'hits' : 'results',
+          total: data.hits?.total?.value || data.total || data.results?.length || 0,
+          firstRecipe: data.hits?.hits?.[0]?._source || data.hits?.[0]?._source || data.results?.[0] || null
+        })
 
         // Elasticsearch returns { total, max_score, hits: [...] }
         // Each hit has { _id, _source: { recipe data } }
-        const recipes = data.hits?.map((hit: any) => ({
+        const recipes = data.hits?.hits?.map((hit: any) => ({
           _id: hit._id,
           ...hit._source
-        })) || []
+        })) || data.hits?.map((hit: any) => ({
+          _id: hit._id,
+          ...hit._source
+        })) || data.results || []
+
+        console.log('✅ Processed recipes:', recipes.length)
+        if (selectedCuisines.length > 0) {
+          console.log('🍳 Cuisine filter check:', {
+            selected: selectedCuisines[0],
+            recipesFound: recipes.length,
+            cuisinesInResults: [...new Set(recipes.map(r => r.cuisine).filter(Boolean))],
+            allRecipesHaveCuisine: recipes.every(r => r.cuisine),
+            sampleRecipes: recipes.slice(0, 3).map(r => ({ title: r.title, cuisine: r.cuisine }))
+          })
+        }
+        if (selectedCourses.length > 0) {
+          console.log('🍽️ Course filter check:', {
+            selected: selectedCourses[0],
+            recipesFound: recipes.length,
+            coursesInResults: [...new Set(recipes.map(r => r.course).filter(Boolean))],
+            allRecipesHaveCourse: recipes.every(r => r.course),
+            sampleRecipes: recipes.slice(0, 3).map(r => ({ title: r.title, course: r.course }))
+          })
+        }
 
         setRecipes(recipes)
       } catch (error) {
@@ -93,24 +190,10 @@ function App() {
     }
 
     fetchRecipes()
-  }, [selectedIngredients, selectedDifficulty, query, ingredients, maxTime])
+  }, [selectedIngredients, selectedDifficulty, selectedCuisines, selectedCourses, query, ingredients, maxTime])
 
   // Calculate filter options with counts
-  const categoryOptions = Array.from(new Set(ingredients.map(i => i.category)))
-    .map(category => {
-      const ingredientsInCategory = ingredients.filter(i => i.category === category)
-      return {
-        id: category,
-        label: category,
-        count: ingredientsInCategory.length
-      }
-    })
-
   const ingredientOptions = ingredients
-    .filter(ingredient => {
-      if (selectedCategories.length === 0) return true
-      return selectedCategories.includes(ingredient.category)
-    })
     .map(ingredient => ({
       id: ingredient._id,
       label: ingredient.name,
@@ -118,6 +201,20 @@ function App() {
         r.ingredients.some(ing => ing.ingredientId === ingredient._id)
       ).length
     }))
+
+  // Calculate cuisine options from all available cuisines
+  const cuisineOptions = allCuisines.map(cuisine => ({
+    id: cuisine,
+    label: cuisine,
+    count: recipes.filter(r => r.cuisine === cuisine).length
+  }))
+
+  // Calculate course options from all available courses
+  const courseOptions = allCourses.map(course => ({
+    id: course,
+    label: course,
+    count: recipes.filter(r => r.course === course).length
+  }))
 
   const openRecipe = useCallback((recipe: Recipe) => {
     setSelected(recipe)
@@ -135,12 +232,6 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const toggleCategory = (id: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-    )
-  }
-
   const toggleIngredient = (id: string) => {
     setSelectedIngredients(prev =>
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
@@ -153,13 +244,27 @@ function App() {
     )
   }
 
-  const clearCategories = () => setSelectedCategories([])
+  const toggleCuisine = (id: string) => {
+    setSelectedCuisines(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    )
+  }
+
+  const toggleCourse = (id: string) => {
+    setSelectedCourses(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    )
+  }
+
   const clearIngredients = () => setSelectedIngredients([])
   const clearDifficulty = () => setSelectedDifficulty([])
+  const clearCuisines = () => setSelectedCuisines([])
+  const clearCourses = () => setSelectedCourses([])
   const removeAll = () => {
-    setSelectedCategories([])
     setSelectedIngredients([])
     setSelectedDifficulty([])
+    setSelectedCuisines([])
+    setSelectedCourses([])
     setMaxTime(null)
   }
 
@@ -169,19 +274,23 @@ function App() {
 
       <div className="app-container">
         <FilterSidebar
-          categories={categoryOptions}
           ingredients={ingredientOptions}
-          selectedCategories={selectedCategories}
+          cuisines={cuisineOptions}
+          courses={courseOptions}
           selectedIngredients={selectedIngredients}
           selectedDifficulty={selectedDifficulty}
+          selectedCuisines={selectedCuisines}
+          selectedCourses={selectedCourses}
           maxTime={maxTime}
-          onToggleCategory={toggleCategory}
           onToggleIngredient={toggleIngredient}
           onToggleDifficulty={toggleDifficulty}
+          onToggleCuisine={toggleCuisine}
+          onToggleCourse={toggleCourse}
           onSetMaxTime={setMaxTime}
-          onClearCategories={clearCategories}
           onClearIngredients={clearIngredients}
           onClearDifficulty={clearDifficulty}
+          onClearCuisines={clearCuisines}
+          onClearCourses={clearCourses}
           onRemoveAll={removeAll}
         />
 

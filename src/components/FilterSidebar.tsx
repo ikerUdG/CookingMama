@@ -2,36 +2,44 @@ import { useState } from 'react'
 import { FilterSection } from './FilterSection'
 
 type Props = {
-  categories: { id: string; label: string; count: number }[]
   ingredients: { id: string; label: string; count: number }[]
-  selectedCategories: string[]
+  cuisines: { id: string; label: string; count: number }[]
+  courses: { id: string; label: string; count: number }[]
   selectedIngredients: string[]
   selectedDifficulty: string[]
+  selectedCuisines: string[]
+  selectedCourses: string[]
   maxTime: number | null
-  onToggleCategory: (id: string) => void
   onToggleIngredient: (id: string) => void
   onToggleDifficulty: (id: string) => void
+  onToggleCuisine: (id: string) => void
+  onToggleCourse: (id: string) => void
   onSetMaxTime: (time: number | null) => void
-  onClearCategories: () => void
   onClearIngredients: () => void
   onClearDifficulty: () => void
+  onClearCuisines: () => void
+  onClearCourses: () => void
   onRemoveAll: () => void
 }
 
 export function FilterSidebar({
-  categories,
   ingredients,
-  selectedCategories,
+  cuisines,
+  courses,
   selectedIngredients,
   selectedDifficulty,
+  selectedCuisines,
+  selectedCourses,
   maxTime,
-  onToggleCategory,
   onToggleIngredient,
   onToggleDifficulty,
+  onToggleCuisine,
+  onToggleCourse,
   onSetMaxTime,
-  onClearCategories,
   onClearIngredients,
   onClearDifficulty,
+  onClearCuisines,
+  onClearCourses,
   onRemoveAll
 }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -108,22 +116,20 @@ export function FilterSidebar({
         )}
       </div>
 
-      {/* Difficulty filter hidden
       <FilterSection
-        title="Dificultad"
-        options={difficultyOptions}
-        selected={selectedDifficulty}
-        onToggle={onToggleDifficulty}
-        onClear={onClearDifficulty}
+        title="Cocina"
+        options={cuisines}
+        selected={selectedCuisines}
+        onToggle={onToggleCuisine}
+        onClear={onClearCuisines}
       />
-      */}
 
       <FilterSection
-        title="Categorías"
-        options={categories}
-        selected={selectedCategories}
-        onToggle={onToggleCategory}
-        onClear={onClearCategories}
+        title="Curso"
+        options={courses}
+        selected={selectedCourses}
+        onToggle={onToggleCourse}
+        onClear={onClearCourses}
       />
 
       <FilterSection
