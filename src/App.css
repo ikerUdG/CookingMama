@@ -559,3 +559,259 @@
   font-weight: 700;
   color: #ff8c42;
 }
+
+/* --- Panel lateral de chat / notes (tema fosc) --- */
+
+.chat-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1100;
+  border-radius: 999px;
+  padding: 10px 16px;
+  border: 1px solid #ff974c;
+  background: #1a1a1a;
+  color: #ff974c;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.chat-toggle:hover {
+  background: #ff974c;
+  color: #0a0a0a;
+}
+
+/* Panell lateral */
+
+.chat-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  max-width: 100%;
+  height: 100vh;
+  background: #0f0f0f;
+  border-left: 1px solid #2a2a2a;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.7);
+  z-index: 1050;
+
+  display: flex;
+  flex-direction: column;
+
+  transform: translateX(100%);
+  transition: transform 0.25s ease-out;
+}
+
+.chat-panel.open {
+  transform: translateX(0);
+}
+
+/* Header del panell */
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #2a2a2a;
+  background: #141414;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.chat-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid #2a2a2a;
+  background: #1a1a1a;
+  color: #ccc;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.chat-close:hover {
+  background: #ff8c42;
+  color: #0a0a0a;
+  border-color: #ff8c42;
+}
+
+/* Cos del xat */
+
+.chat-body {
+  flex: 1;
+  padding: 10px 14px;
+  overflow-y: auto;
+  background: #0f0f0f;
+}
+
+.chat-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 8px;
+}
+
+.chat-empty {
+  color: #888;
+  font-size: 14px;
+}
+
+.chat-messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Cada missatge (contenidor per avatar + bombolla) */
+
+.chat-message-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+/* Avatar usuari / assistent */
+
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  background: white;
+}
+
+/* Alineació assistent (esquerra) */
+.assistant-wrapper {
+  justify-content: flex-start;
+}
+
+/* Alineació usuari (dreta) */
+.user-wrapper {
+  justify-content: flex-end;
+}
+
+.user-wrapper .chat-avatar {
+  order: 2;
+}
+
+.user-wrapper .chat-message {
+  order: 1;
+}
+
+/* Bombolles */
+
+.chat-message {
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 14px;
+  max-width: 75%;
+  line-height: 1.5;
+}
+
+/* Missatges assistent: foscos */
+
+.assistant-wrapper .chat-message {
+  background: #181818;
+  color: #eee;
+  border: 1px solid #2a2a2a;
+}
+
+/* Missatges usuari: accent taronja */
+
+.user-wrapper .chat-message {
+  background: #ff974c;
+  color: #0a0a0a;
+  border: 1px solid #ffb98a;
+}
+
+/* Peu del panell (textarea + botó) */
+
+.chat-footer {
+  border-top: 1px solid #2a2a2a;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 8px;
+  background: #141414;
+}
+
+/* Àrea d’escriptura */
+
+.chat-input {
+  flex: 1;
+  resize: vertical;
+  min-height: 60px;
+  max-height: 160px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  background: #0f0f0f;
+  color: #f5f5f5;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: inherit;
+}
+
+.chat-input::placeholder {
+  color: #b5afaf;
+  font-weight: 400;
+}
+
+/* Botó d’enviament */
+
+.chat-send {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #ff974c;
+  background: #ff974c;
+  color: #0a0a0a;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.chat-send:hover {
+  background: #ffb98a;
+  border-color: #ffb98a;
+}
+
+.chat-send:disabled {
+  opacity: 1;
+  cursor: not-allowed !important;
+}
+
+.chat-send:disabled:hover {
+  background: #a7a6a5;
+  border-color: #ce3d3d;
+}

@@ -6,6 +6,7 @@ import { RecipeModal } from './components/RecipeModal'
 import { FilterSidebar } from './components/FilterSidebar'
 import { Layout } from './components/Layout'
 import type { Recipe, Ingredient } from './types'
+import { ChatSidebar } from './components/ChatSidebar'
 
 const API_BASE = 'http://localhost:3000'
 
@@ -311,6 +312,7 @@ function App() {
       </footer>
 
       {selected && (<RecipeModal recipe={selected} onClose={closeRecipe} />)}
+      <ChatSidebar />
     </Layout>
   )
 }
